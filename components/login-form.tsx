@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { LoaderCircle, LockKeyhole, Mail } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
+import { motion } from "framer-motion";
+import { LoaderCircle, LockKeyhole, Mail } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 
 export function LoginForm() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@pousadasancho.com');
-  const [password, setPassword] = useState('sancho123');
+  const [email, setEmail] = useState("admin@pousadasancho.com");
+  const [password, setPassword] = useState("sancho123");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -17,10 +17,10 @@ export function LoginForm() {
     setLoading(true);
     setError(null);
 
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
     });
@@ -28,12 +28,18 @@ export function LoginForm() {
     setLoading(false);
 
     if (!response.ok) {
-      const payload = (await response.json()) as { message?: string };
-      setError(payload.message ?? 'Não foi possível acessar a conta.');
+      try {
+        const payload = (await response.json()) as { message?: string };
+        setError(payload.message ?? "Não foi possível acessar a conta.");
+      } catch (err) {
+        setError(
+          "Erro interno de comunicação. Verifique o terminal do servidor.",
+        );
+      }
       return;
     }
 
-    router.push('/dashboard/calendar');
+    router.push("/dashboard/calendar");
     router.refresh();
   }
 
@@ -41,7 +47,7 @@ export function LoginForm() {
     <motion.form
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       onSubmit={handleSubmit}
       className="glass-panel w-full max-w-md rounded-[32px] p-8"
     >
@@ -49,15 +55,20 @@ export function LoginForm() {
         <span className="inline-flex rounded-full border border-sky-400/20 bg-sky-400/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.3em] text-sky-200">
           Sistema de Gestão de Reservas
         </span>
-        <h1 className="text-3xl font-semibold text-white">Bem-vindo à [Nome da Sua Pousada]</h1>
+        <h1 className="text-3xl font-semibold text-white">
+          Bem-vindo à [Nome da Sua Pousada]
+        </h1>
         <p className="text-sm leading-6 text-slate-300">
-          Entre para acompanhar a ocupação, organizar bloqueios e manter o calendário da sua hospedagem sempre atualizado.
+          Entre para acompanhar a ocupação, organizar bloqueios e manter o
+          calendário da sua hospedagem sempre atualizado.
         </p>
       </div>
 
       <div className="space-y-4">
         <label className="block">
-          <span className="mb-2 block text-sm font-medium text-slate-200">E-mail</span>
+          <span className="mb-2 block text-sm font-medium text-slate-200">
+            E-mail
+          </span>
           <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3">
             <Mail className="h-4 w-4 text-slate-400" />
             <input
@@ -71,7 +82,9 @@ export function LoginForm() {
         </label>
 
         <label className="block">
-          <span className="mb-2 block text-sm font-medium text-slate-200">Senha</span>
+          <span className="mb-2 block text-sm font-medium text-slate-200">
+            Senha
+          </span>
           <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3">
             <LockKeyhole className="h-4 w-4 text-slate-400" />
             <input

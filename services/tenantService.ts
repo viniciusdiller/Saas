@@ -1,7 +1,7 @@
-import { getDb } from '@/lib/db';
-import type { Expense, Reservation, Room } from '@/types/channex';
+import { getDb } from "@/lib/db";
+import type { Expense, Reservation, Room } from "@/types/channex";
 
-function mapRoom(room: InstanceType<ReturnType<typeof getDb>['Room']>): Room {
+function mapRoom(room: InstanceType<ReturnType<typeof getDb>["Room"]>): Room {
   return {
     id: room.localRoomId,
     channexRoomTypeId: room.channexRoomTypeId,
@@ -12,14 +12,19 @@ function mapRoom(room: InstanceType<ReturnType<typeof getDb>['Room']>): Room {
 }
 
 function mapReservation(
-  reservation: InstanceType<ReturnType<typeof getDb>['Reservation']>,
+  reservation: InstanceType<ReturnType<typeof getDb>["Reservation"]>,
   roomLocalRoomId: string,
 ): Reservation {
+  const formatDbDate = (val: any) => {
+    if (!val) return "";
+    const str = typeof val === "string" ? val : new Date(val).toISOString();
+    return str.substring(0, 10);
+  };
   return {
     id: reservation.channexReservationId,
     roomId: roomLocalRoomId,
-    checkIn: reservation.checkIn,
-    checkOut: reservation.checkOut,
+    checkIn: formatDbDate(reservation.checkIn),
+    checkOut: formatDbDate(reservation.checkOut),
     status: reservation.status,
     otaSource: reservation.otaSource,
     channelReference: reservation.channelReference,
@@ -34,7 +39,9 @@ function mapReservation(
   };
 }
 
-function mapExpense(expense: InstanceType<ReturnType<typeof getDb>['Expense']>): Expense {
+function mapExpense(
+  expense: InstanceType<ReturnType<typeof getDb>["Expense"]>,
+): Expense {
   return {
     id: String(expense.id),
     description: expense.description,
@@ -46,31 +53,41 @@ function mapExpense(expense: InstanceType<ReturnType<typeof getDb>['Expense']>):
 
 export async function getRooms(tenantId: number): Promise<Room[]> {
   const { Room } = getDb();
-  const rooms = await Room.findAll({ where: { tenantId }, order: [['name', 'ASC']] });
+  const rooms = await Room.findAll({
+    where: { tenantId },
+    order: [["name", "ASC"]],
+  });
   return rooms.map((room) => mapRoom(room));
 }
 
-export async function getReservations(tenantId: number): Promise<Reservation[]> {
+export async function getReservations(
+  tenantId: number,
+): Promise<Reservation[]> {
   const { Room, Reservation } = getDb();
   const reservations = await Reservation.findAll({
     where: { tenantId },
-    include: [{ model: Room, as: 'room' }],
-    order: [['checkIn', 'ASC']],
+    include: [{ model: Room, as: "room" }],
+    order: [["checkIn", "ASC"]],
   });
 
   return reservations.map((reservation) => {
-    const room = reservation.get('room') as InstanceType<typeof Room>;
+    const room = reservation.get("room") as InstanceType<typeof Room>;
     return mapReservation(reservation, room.localRoomId);
   });
 }
 
-export async function updateReservation(tenantId: number, updatedReservation: Reservation): Promise<Reservation> {
+export async function updateReservation(
+  tenantId: number,
+  updatedReservation: Reservation,
+): Promise<Reservation> {
   const { Room, Reservation } = getDb();
 
-  const room = await Room.findOne({ where: { tenantId, localRoomId: updatedReservation.roomId } });
+  const room = await Room.findOne({
+    where: { tenantId, localRoomId: updatedReservation.roomId },
+  });
 
   if (!room) {
-    throw new Error('Quarto não encontrado para este tenant.');
+    throw new Error("Quarto não encontrado para este tenant.");
   }
 
   const reservation = await Reservation.findOne({
@@ -81,7 +98,7 @@ export async function updateReservation(tenantId: number, updatedReservation: Re
   });
 
   if (!reservation) {
-    throw new Error('Reserva não encontrada para este tenant.');
+    throw new Error("Reserva não encontrada para este tenant.");
   }
 
   await reservation.update({
@@ -104,11 +121,20 @@ export async function updateReservation(tenantId: number, updatedReservation: Re
 
 export async function getExpenses(tenantId: number): Promise<Expense[]> {
   const { Expense } = getDb();
-  const expenses = await Expense.findAll({ where: { tenantId }, order: [['date', 'DESC'], ['id', 'DESC']] });
+  const expenses = await Expense.findAll({
+    where: { tenantId },
+    order: [
+      ["date", "DESC"],
+      ["id", "DESC"],
+    ],
+  });
   return expenses.map((expense) => mapExpense(expense));
 }
 
-export async function createExpense(tenantId: number, input: Omit<Expense, 'id'>): Promise<Expense> {
+export async function createExpense(
+  tenantId: number,
+  input: Omit<Expense, "id">,
+): Promise<Expense> {
   const { Expense } = getDb();
   const expense = await Expense.create({ ...input, tenantId });
   return mapExpense(expense);

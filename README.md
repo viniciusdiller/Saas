@@ -1,4 +1,4 @@
-# Channel Manager MVP - Pousada Sancho
+# Channel Manager MVP - Pousada Viva Mar
 
 ## Estrutura sugerida
 
@@ -7,27 +7,42 @@ app/
   api/auth/
     login/route.ts
     logout/route.ts
+  api/tenant/
+    inventory/route.ts
+    reservations/route.ts
+    expenses/route.ts
+  api/webhooks/
+    provision/route.ts
   dashboard/
     calendar/page.tsx
+    finance/page.tsx
     layout.tsx
   globals.css
   layout.tsx
   page.tsx
 components/
-  calendar-skeleton.tsx
+  dashboard-sidebar.tsx
+  expense-modal-form.tsx
   login-form.tsx
   toast-provider.tsx
   unified-calendar.tsx
+actions/
+  expense.ts
+  reservation.ts
 lib/
   auth.ts
+  db.ts
   utils.ts
 models/
-  Reservation.ts
-  Room.ts
+  Tenant.ts
   User.ts
+  Room.ts
+  Reservation.ts
+  Expense.ts
   index.ts
 services/
-  channexService.ts
+  demoData.ts
+  tenantService.ts
 types/
   channex.ts
 middleware.ts
@@ -35,6 +50,6 @@ middleware.ts
 
 ## Observações arquiteturais
 
-- A UI lê quartos e reservas exclusivamente de `services/channexService.ts`.
-- Os modelos Sequelize estão prontos para MySQL hospedado e preparados para futura integração com Channex.io.
-- A autenticação atual é de demonstração, baseada em cookie HttpOnly, para viabilizar o fluxo do MVP.
+- O sistema funciona em modo persistente (Sequelize/MySQL) e também em modo demo com fallback de mocks.
+- Toda consulta de domínio é tenant-scoped para evitar vazamento de dados entre pousadas.
+- O fluxo de autenticação usa cookie HttpOnly (`sancho_session`) com payload de tenant/plano para gate de funcionalidades.

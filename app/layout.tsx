@@ -3,8 +3,8 @@ import './globals.css';
 import { ToastProvider } from '@/components/toast-provider';
 
 export const metadata: Metadata = {
-  title: 'Pousada Sancho | Channel Manager',
-  description: 'MVP de channel manager para prevenção de overbooking em pousadas.',
+  title: 'Pousada Viva Mar | Channel Manager',
+  description: 'Plataforma de operação hoteleira da Pousada Viva Mar.',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

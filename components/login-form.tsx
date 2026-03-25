@@ -7,8 +7,8 @@ import { FormEvent, useState } from 'react';
 
 export function LoginForm() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@pousadasancho.com');
-  const [password, setPassword] = useState('sancho123');
+  const [email, setEmail] = useState('admin@vivamar.com.br');
+  const [password, setPassword] = useState('vivamar123');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -49,7 +49,7 @@ export function LoginForm() {
         <span className="inline-flex rounded-full border border-sky-400/20 bg-sky-400/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.3em] text-sky-200">
           Sistema de Gestão de Reservas
         </span>
-        <h1 className="text-3xl font-semibold text-white">Bem-vindo à [Nome da Sua Pousada]</h1>
+        <h1 className="text-3xl font-semibold text-white">Bem-vindo à Pousada Viva Mar</h1>
         <p className="text-sm leading-6 text-slate-300">
           Entre para acompanhar a ocupação, organizar bloqueios e manter o calendário da sua hospedagem sempre atualizado.
         </p>
@@ -99,9 +99,9 @@ export function LoginForm() {
       </motion.button>
 
       <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-300">
-        <p className="font-medium text-white">Acesso de demonstração</p>
-        <p>E-mail: admin@pousadasancho.com</p>
-        <p>Senha: sancho123</p>
+        <p className="font-medium text-white">Acesso de demonstração Viva Mar</p>
+        <p>E-mail: admin@vivamar.com.br</p>
+        <p>Senha: vivamar123</p>
       </div>
     </motion.form>
   );

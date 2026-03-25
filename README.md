@@ -1,4 +1,4 @@
-# Channel Manager MVP - Pousada Sancho
+# Pousada Viva Mar - SaaS de Demonstração
 
 ## Estrutura sugerida
 
@@ -27,7 +27,8 @@ models/
   User.ts
   index.ts
 services/
-  channexService.ts
+  tenantService.ts
+  demoData.ts
 types/
   channex.ts
 middleware.ts
@@ -35,6 +36,6 @@ middleware.ts
 
 ## Observações arquiteturais
 
-- A UI lê quartos e reservas exclusivamente de `services/channexService.ts`.
+- A UI lê quartos e reservas via `services/tenantService.ts`, com fallback para dados mock de demonstração em `services/demoData.ts`.
 - Os modelos Sequelize estão prontos para MySQL hospedado e preparados para futura integração com Channex.io.
 - A autenticação atual é de demonstração, baseada em cookie HttpOnly, para viabilizar o fluxo do MVP.

@@ -23,7 +23,7 @@ export function DashboardSidebar({ tenantName, navItems }: { tenantName: string;
     <aside className="rounded-[28px] border border-white/10 bg-slate-900/85 p-5 shadow-2xl shadow-slate-950/30">
       <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-5">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-sky-300">Channel Manager</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-sky-300">Pousada Viva Mar</p>
           <h1 className="mt-3 text-2xl font-semibold text-white">{tenantName}</h1>
           <p className="mt-2 text-sm leading-6 text-slate-400">
             Painel operacional para disponibilidade, moderação de reservas e controle financeiro.

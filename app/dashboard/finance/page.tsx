@@ -30,9 +30,9 @@ export default async function FinancePage() {
     return (
       <section className="glass-panel rounded-[28px] border border-white/10 bg-slate-900/80 p-8 shadow-2xl shadow-slate-950/20">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-sky-300">Plano atual: Basic</p>
-        <h2 className="mt-3 text-3xl font-semibold text-white">Módulo Financeiro indisponível</h2>
+        <h2 className="mt-3 text-3xl font-semibold text-white">Módulo Financeiro da Viva Mar indisponível</h2>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
-          Desbloqueie o Controle Financeiro: Tenha clareza do seu lucro líquido, controle despesas e abandone as planilhas.
+          Desbloqueie o Controle Financeiro da Viva Mar: Tenha clareza do seu lucro líquido, controle despesas e abandone as planilhas.
           Faça o upgrade para o plano Pro.
         </p>
         <button className="mt-6 inline-flex items-center justify-center gap-2 rounded-2xl bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-950/30">
@@ -54,8 +54,8 @@ export default async function FinancePage() {
       <section className="rounded-[28px] border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-slate-950/20">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-sky-300">Aba financeira</p>
-            <h2 className="mt-3 text-3xl font-semibold text-white">Saúde financeira da operação</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-sky-300">Financeiro Viva Mar</p>
+            <h2 className="mt-3 text-3xl font-semibold text-white">Saúde financeira da Pousada Viva Mar</h2>
           </div>
           <ExpenseModalForm />
         </div>

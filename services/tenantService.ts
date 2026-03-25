@@ -1,4 +1,12 @@
 import { getDb } from "@/lib/db";
+import {
+  DEMO_TENANT_ID,
+  createDemoExpense,
+  getDemoExpenses,
+  getDemoReservations,
+  getDemoRooms,
+  updateDemoReservation,
+} from "@/services/demoData";
 import type { Expense, Reservation, Room } from "@/types/channex";
 
 function mapRoom(room: InstanceType<ReturnType<typeof getDb>["Room"]>): Room {
@@ -52,34 +60,54 @@ function mapExpense(
 }
 
 export async function getRooms(tenantId: number): Promise<Room[]> {
-  const { Room } = getDb();
-  const rooms = await Room.findAll({
-    where: { tenantId },
-    order: [["name", "ASC"]],
-  });
-  return rooms.map((room) => mapRoom(room));
+  if (tenantId === DEMO_TENANT_ID) {
+    return getDemoRooms();
+  }
+
+  try {
+    const { Room } = getDb();
+    const rooms = await Room.findAll({
+      where: { tenantId },
+      order: [["name", "ASC"]],
+    });
+    return rooms.map((room) => mapRoom(room));
+  } catch {
+    return getDemoRooms();
+  }
 }
 
 export async function getReservations(
   tenantId: number,
 ): Promise<Reservation[]> {
-  const { Room, Reservation } = getDb();
-  const reservations = await Reservation.findAll({
-    where: { tenantId },
-    include: [{ model: Room, as: "room" }],
-    order: [["checkIn", "ASC"]],
-  });
+  if (tenantId === DEMO_TENANT_ID) {
+    return getDemoReservations();
+  }
 
-  return reservations.map((reservation) => {
-    const room = reservation.get("room") as InstanceType<typeof Room>;
-    return mapReservation(reservation, room.localRoomId);
-  });
+  try {
+    const { Room, Reservation } = getDb();
+    const reservations = await Reservation.findAll({
+      where: { tenantId },
+      include: [{ model: Room, as: "room" }],
+      order: [["checkIn", "ASC"]],
+    });
+
+    return reservations.map((reservation) => {
+      const room = reservation.get("room") as InstanceType<typeof Room>;
+      return mapReservation(reservation, room.localRoomId);
+    });
+  } catch {
+    return getDemoReservations();
+  }
 }
 
 export async function updateReservation(
   tenantId: number,
   updatedReservation: Reservation,
 ): Promise<Reservation> {
+  if (tenantId === DEMO_TENANT_ID) {
+    return updateDemoReservation(updatedReservation);
+  }
+
   const { Room, Reservation } = getDb();
 
   const room = await Room.findOne({
@@ -120,21 +148,33 @@ export async function updateReservation(
 }
 
 export async function getExpenses(tenantId: number): Promise<Expense[]> {
-  const { Expense } = getDb();
-  const expenses = await Expense.findAll({
-    where: { tenantId },
-    order: [
-      ["date", "DESC"],
-      ["id", "DESC"],
-    ],
-  });
-  return expenses.map((expense) => mapExpense(expense));
+  if (tenantId === DEMO_TENANT_ID) {
+    return getDemoExpenses();
+  }
+
+  try {
+    const { Expense } = getDb();
+    const expenses = await Expense.findAll({
+      where: { tenantId },
+      order: [
+        ["date", "DESC"],
+        ["id", "DESC"],
+      ],
+    });
+    return expenses.map((expense) => mapExpense(expense));
+  } catch {
+    return getDemoExpenses();
+  }
 }
 
 export async function createExpense(
   tenantId: number,
   input: Omit<Expense, "id">,
 ): Promise<Expense> {
+  if (tenantId === DEMO_TENANT_ID) {
+    return createDemoExpense(input);
+  }
+
   const { Expense } = getDb();
   const expense = await Expense.create({ ...input, tenantId });
   return mapExpense(expense);

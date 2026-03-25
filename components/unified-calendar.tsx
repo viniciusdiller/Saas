@@ -384,10 +384,10 @@ export function UnifiedCalendar() {
         <section className="rounded-[30px] border border-white/10 bg-slate-900/85 p-6 shadow-2xl shadow-slate-950/20">
           <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-sky-300">Calendário operacional</p>
-              <h2 className="mt-3 text-3xl font-semibold text-white">Disponibilidade com visual de PMS moderno</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-sky-300">Calendário Viva Mar</p>
+              <h2 className="mt-3 text-3xl font-semibold text-white">Painel de disponibilidade da Pousada Viva Mar</h2>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
-                Acompanhe a ocupação, visualize mais períodos no tempo e modere reservas em contexto sem sair da grade.
+                Acompanhe a ocupação da Pousada Viva Mar, visualize mais períodos e modere reservas sem sair da grade.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -597,6 +597,9 @@ export function UnifiedCalendar() {
                           return null;
                         }
 
+                        const isCompactCard = visibleDuration <= 2;
+                        const isUltraCompactCard = visibleDuration === 1;
+
                         return (
                           <motion.button
                             key={reservation.id}
@@ -605,7 +608,7 @@ export function UnifiedCalendar() {
                             whileTap={{ scale: 0.99 }}
                             onClick={() => openReservationDrawer(reservation)}
                             className={cn(
-                              'absolute top-3 flex h-[96px] flex-col justify-between rounded-[20px] border border-black/10 px-4 py-3 text-left shadow-lg shadow-slate-950/25',
+                              'absolute top-3 flex h-[96px] min-w-0 flex-col justify-between overflow-hidden rounded-[20px] border border-black/10 px-3 py-3 text-left shadow-lg shadow-slate-950/25 sm:px-4',
                               OTA_STYLES[reservation.otaSource],
                             )}
                             style={{
@@ -613,19 +616,23 @@ export function UnifiedCalendar() {
                               width: `calc(${visibleDuration} * (100% / ${daysVisible}) + ${Math.max(visibleDuration - 1, 0)} * 0.75rem - 0.75rem)`,
                             }}
                           >
-                            <div>
-                              <div className="flex items-center justify-between gap-3">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] opacity-80">
+                            <div className="min-w-0">
+                              <div className="flex items-center justify-between gap-2">
+                                <p className="truncate text-[10px] font-semibold uppercase tracking-[0.18em] opacity-80 sm:text-[11px] sm:tracking-[0.24em]">
                                   {OTA_LABELS[reservation.otaSource]}
                                 </p>
-                                <span className="text-[11px] opacity-85">{STATUS_LABELS[reservation.status]}</span>
+                                {!isUltraCompactCard ? <span className="truncate text-[10px] opacity-85 sm:text-[11px]">{STATUS_LABELS[reservation.status]}</span> : null}
                               </div>
-                              <p className="mt-3 text-sm font-semibold">{reservation.customer.name}</p>
-                              <p className="mt-1 text-xs opacity-90">{formatCurrency(reservation.amount, reservation.currency)}</p>
+                              <p className="mt-2 truncate text-xs font-semibold sm:text-sm" title={reservation.customer.name}>
+                                {reservation.customer.name}
+                              </p>
+                              {!isCompactCard ? (
+                                <p className="mt-1 truncate text-[11px] opacity-90">{formatCurrency(reservation.amount, reservation.currency)}</p>
+                              ) : null}
                             </div>
-                            <div className="flex items-center justify-between text-[11px] opacity-85">
-                              <span>{reservation.channelReference}</span>
-                              <span>
+                            <div className="flex items-center justify-between gap-2 text-[10px] opacity-85 sm:text-[11px]">
+                              {!isCompactCard ? <span className="truncate">{reservation.channelReference}</span> : null}
+                              <span className="truncate">
                                 {reservation.checkIn.slice(5)} → {reservation.checkOut.slice(5)}
                               </span>
                             </div>

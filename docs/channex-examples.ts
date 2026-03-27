@@ -220,3 +220,24 @@ export const CREATE_HOTEL_POLICY_EXAMPLE = {
     smoking_policy: 'no_smoking',
   },
 };
+
+export const SEND_BOOKING_MESSAGE_EXAMPLE = {
+  message: {
+    message: 'Olá! Seu check-in está confirmado para 14:00.',
+  },
+};
+
+export const CREATE_ATTACHMENT_EXAMPLE = {
+  attachment: {
+    file: 'base64_encoded_file_content',
+    file_name: 'voucher.pdf',
+    file_type: 'application/pdf',
+  },
+};
+
+export const SEND_THREAD_ATTACHMENT_EXAMPLE = {
+  message: {
+    attachment_id: 'c40a00f9-d3d3-4809-8d46-adc378c95f20',
+    message: 'Segue o comprovante solicitado.',
+  },
+};

@@ -79,6 +79,7 @@ middleware.ts
 - `photos`: list/get/create/update/delete + upload multipart (`/api/tenant/channex/photos`, `/api/tenant/channex/photos/upload`).
 - `hotel_policies`: list/get/create/update/delete (`/api/tenant/channex/hotel-policies`).
 - `facilities`: property/room list e options (`/api/tenant/channex/facilities/property`, `/api/tenant/channex/facilities/room`).
+- `messages`: booking messages + message threads (list/get/messages/send/close/no-reply-needed) e upload lógico de anexos em `/api/tenant/channex/attachments`.
 
 
 

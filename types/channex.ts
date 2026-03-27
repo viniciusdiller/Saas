@@ -782,3 +782,79 @@ export type ChannexFacilityResource = {
     title: string;
   };
 };
+
+export type ChannexMessageSender = 'guest' | 'property' | 'system';
+
+export type ChannexMessageResource = {
+  id: string;
+  type: 'message';
+  attributes: {
+    message: string;
+    attachments: string[];
+    sender: ChannexMessageSender;
+    inserted_at: string;
+    updated_at: string;
+    meta?: Record<string, unknown>;
+  };
+  relationships?: {
+    message_thread?: {
+      data: {
+        id: string;
+        type: 'message_thread';
+      };
+    };
+    user?: {
+      data: {
+        id: string;
+        type: 'user';
+      };
+    };
+  };
+};
+
+export type ChannexMessageThreadResource = {
+  id: string;
+  type: 'message_thread';
+  attributes: {
+    title: string;
+    is_closed: boolean;
+    provider: string;
+    message_count: number;
+    last_message: {
+      attachments: string[];
+      inserted_at: string;
+      message: string;
+      sender: ChannexMessageSender;
+    };
+    last_message_received_at: string;
+    inserted_at: string;
+    updated_at: string;
+  };
+  relationships?: {
+    booking?: { data: { id: string; type: 'booking' } };
+    channel?: { data: { id: string; type: 'channel' } };
+    property?: { data: { id: string; type: 'property' } };
+  };
+};
+
+export type ChannexBookingMessageWritePayload = {
+  message: {
+    message?: string;
+    attachment_id?: string;
+  };
+};
+
+export type ChannexThreadMessageWritePayload = ChannexBookingMessageWritePayload;
+
+export type ChannexAttachmentResource = {
+  id: string;
+  type: 'attachment';
+};
+
+export type ChannexAttachmentCreatePayload = {
+  attachment: {
+    file: string;
+    file_name: string;
+    file_type: string;
+  };
+};

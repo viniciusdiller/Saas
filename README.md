@@ -80,6 +80,9 @@ middleware.ts
 - `hotel_policies`: list/get/create/update/delete (`/api/tenant/channex/hotel-policies`).
 - `facilities`: property/room list e options (`/api/tenant/channex/facilities/property`, `/api/tenant/channex/facilities/room`).
 - `messages`: booking messages + message threads (list/get/messages/send/close/no-reply-needed) e upload lógico de anexos em `/api/tenant/channex/attachments`.
+- `reviews` + `scores`: list/get de reviews, reply, guest_review, score por propriedade e score detalhado (`/api/tenant/channex/reviews`, `/api/tenant/channex/scores/:propertyId`).
+- `channel_availability_rules`: list/get/create/update/delete com filtro por propriedade (`/api/tenant/channex/channel-availability-rules`).
+- `stripe_tokenization`: criação de token de cartão e payment method por booking (`/api/tenant/channex/bookings/:id/stripe-token`, `/api/tenant/channex/bookings/:id/stripe-payment-method`).
 
 
 

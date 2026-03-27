@@ -241,3 +241,45 @@ export const SEND_THREAD_ATTACHMENT_EXAMPLE = {
     message: 'Segue o comprovante solicitado.',
   },
 };
+
+export const REPLY_TO_REVIEW_EXAMPLE = {
+  reply: {
+    reply: 'Obrigado pelo feedback! Ficamos felizes que você tenha gostado da estadia.',
+  },
+};
+
+export const SEND_GUEST_REVIEW_EXAMPLE = {
+  review: {
+    scores: [
+      {
+        category: 'respect_house_rules',
+        rating: 5,
+      },
+      {
+        category: 'communication',
+        rating: 5,
+      },
+      {
+        category: 'cleanliness',
+        rating: 5,
+      },
+    ],
+    private_review: 'Hóspede atencioso e tranquilo.',
+    public_review: 'Ótima comunicação durante toda a estadia.',
+    is_reviewee_recommended: true,
+    tags: ['host_review_guest_positive_neat_and_tidy'],
+  },
+};
+
+export const CREATE_CHANNEL_AVAILABILITY_RULE_EXAMPLE = {
+  channel_availability_rule: {
+    title: 'Fechamento feriado',
+    type: 'close_out',
+    affected_channels: ['aa771972-ca6c-4985-a4ea-1aad29a0c2fd'],
+    affected_room_types: ['ae1c960d-5123-4be1-94ad-b50b181fc259'],
+    days: ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'],
+    start_date: '2026-12-20',
+    end_date: '2026-12-27',
+    property_id: '18535b75-26a0-4716-ae99-0578006639c5',
+  },
+};

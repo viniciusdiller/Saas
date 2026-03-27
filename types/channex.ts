@@ -858,3 +858,154 @@ export type ChannexAttachmentCreatePayload = {
     file_type: string;
   };
 };
+
+export type ChannexReviewScoreItem = {
+  category: string;
+  score: number;
+};
+
+export type ChannexReviewResource = {
+  id: string;
+  type: 'review';
+  attributes: {
+    id: string;
+    content: string | null;
+    guest_name: string | null;
+    is_hidden: boolean;
+    is_replied: boolean;
+    ota: string;
+    ota_reservation_id: string;
+    overall_score: number | null;
+    received_at: string;
+    inserted_at: string;
+    updated_at: string;
+    reply: string | null;
+    scores: ChannexReviewScoreItem[];
+    tags: string[];
+  };
+  relationships?: {
+    booking?: { data: { id: string; type: 'booking' } };
+    channel?: { data: { id: string; type: 'channel' } };
+    property?: { data: { id: string; type: 'property'; title?: string } };
+  };
+};
+
+export type ChannexReviewReplyPayload = {
+  reply: {
+    reply: string;
+  };
+};
+
+export type ChannexGuestReviewScorePayload = {
+  category: string;
+  rating: number;
+};
+
+export type ChannexReviewGuestReviewPayload = {
+  review: {
+    scores: ChannexGuestReviewScorePayload[];
+    private_review?: string;
+    public_review?: string;
+    is_reviewee_recommended?: boolean;
+    tags?: string[];
+  };
+};
+
+export type ChannexScoreMap = Record<
+  string,
+  {
+    count: number;
+    score: number;
+  }
+>;
+
+export type ChannexPropertyScoreResource = {
+  id: string;
+  type: 'score';
+  attributes: {
+    id: string;
+    count: number;
+    overall_score: number;
+    scores: ChannexScoreMap;
+    inserted_at: string;
+    updated_at: string;
+  };
+  relationships?: {
+    property?: {
+      data: {
+        id: string;
+        type: 'property';
+        title?: string;
+      };
+    };
+  };
+};
+
+export type ChannexOtaScoreResource = {
+  id: string;
+  type: 'ota_score';
+  attributes: {
+    id: string;
+    channel_id: string;
+    count: number;
+    ota: string;
+    overall_score: number;
+    scores: ChannexScoreMap;
+  };
+};
+
+export type ChannexDetailedScoreResource = ChannexPropertyScoreResource & {
+  relationships?: ChannexPropertyScoreResource['relationships'] & {
+    ota_scores?: Array<{
+      data: ChannexOtaScoreResource;
+    }>;
+  };
+};
+
+export type ChannexAvailabilityRuleType = 'close_out' | 'availability_offset' | 'max_availability';
+
+export type ChannexAvailabilityRuleResource = {
+  id: string;
+  type: 'channel_availability_rule';
+  attributes: {
+    id: string;
+    title: string;
+    type: ChannexAvailabilityRuleType;
+    value: number | null;
+    days: string[];
+    start_date: string;
+    end_date: string | null;
+    affected_channels: string[];
+    affected_room_types: string[];
+  };
+  relationships?: {
+    property?: {
+      data: {
+        id: string;
+        type: 'property';
+      };
+    };
+  };
+};
+
+export type ChannexAvailabilityRuleWritePayload = {
+  title: string;
+  type: ChannexAvailabilityRuleType;
+  value?: number | null;
+  affected_channels: string[];
+  affected_room_types: string[];
+  days?: string[];
+  start_date: string;
+  end_date?: string;
+  property_id: string;
+};
+
+export type ChannexCreateAvailabilityRulePayload = {
+  channel_availability_rule: ChannexAvailabilityRuleWritePayload;
+};
+
+export type ChannexUpdateAvailabilityRulePayload = ChannexCreateAvailabilityRulePayload;
+
+export type ChannexStripeTokenResponse = {
+  token: string;
+};

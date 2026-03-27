@@ -119,3 +119,47 @@ export const CREATE_RATE_PLAN_EXAMPLE = {
     rate_mode: 'manual',
   },
 };
+
+export const GET_RESTRICTIONS_QUERY_EXAMPLE =
+  '/restrictions?filter[property_id]=716305c4-561a-4561-a187-7f5b8aeb5920&filter[date][gte]=2026-03-01&filter[date][lte]=2026-03-10&filter[restrictions]=rate,min_stay_arrival';
+
+export const UPDATE_RESTRICTIONS_EXAMPLE = {
+  values: [
+    {
+      property_id: '716305c4-561a-4561-a187-7f5b8aeb5920',
+      rate_plan_id: 'bab451e7-9ab1-4cc4-aa16-107bf7bbabb2',
+      date_from: '2026-04-01',
+      date_to: '2026-04-30',
+      days: ['fr', 'sa', 'su'],
+      rate: 35000,
+      min_stay_through: 2,
+      closed_to_arrival: false,
+      closed_to_departure: false,
+    },
+  ],
+};
+
+export const UPDATE_AVAILABILITY_EXAMPLE = {
+  values: [
+    {
+      property_id: '716305c4-561a-4561-a187-7f5b8aeb5920',
+      room_type_id: '994d1375-dbbd-4072-8724-b2ab32ce781b',
+      date_from: '2026-04-01',
+      date_to: '2026-04-30',
+      availability: 5,
+    },
+  ],
+};
+
+export const CREATE_WEBHOOK_EXAMPLE = {
+  webhook: {
+    callback_url: 'https://pousada.exemplo.com/hooks/channex',
+    event_mask: 'booking',
+    property_id: '716305c4-561a-4561-a187-7f5b8aeb5920',
+    headers: {
+      'x-signature': 'secret-demo',
+    },
+    is_active: true,
+    send_data: true,
+  },
+};

@@ -68,3 +68,17 @@ export function queueAvailabilityUpdate<T>(propertyId: string, path: string, bod
     ),
   );
 }
+
+
+export function queueAriPost<T>(propertyId: string, path: '/availability' | '/restrictions', body: unknown) {
+  return enqueueAriRequest(propertyId, () =>
+    channexRequest<T>(
+      path,
+      {
+        method: 'POST',
+        body: JSON.stringify(body),
+        propertyId,
+      },
+    ),
+  );
+}

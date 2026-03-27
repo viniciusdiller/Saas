@@ -464,3 +464,86 @@ export type ChannexCreateRatePlanPayload = {
 export type ChannexUpdateRatePlanPayload = {
   rate_plan: Partial<ChannexCreateRatePlanPayload['rate_plan']>;
 };
+
+export type ChannexRestrictionName =
+  | 'availability'
+  | 'rate'
+  | 'min_stay_arrival'
+  | 'min_stay_through'
+  | 'min_stay'
+  | 'closed_to_arrival'
+  | 'closed_to_departure'
+  | 'stop_sell'
+  | 'max_stay'
+  | 'availability_offset'
+  | 'max_availability';
+
+export type ChannexRestrictionObject = Record<string, Record<string, Record<string, string | number | boolean | null>>>;
+export type ChannexAvailabilityObject = Record<string, Record<string, number>>;
+
+export type ChannexAriValue = {
+  property_id: string;
+  rate_plan_id?: string;
+  room_type_id?: string;
+  date?: string;
+  date_from?: string;
+  date_to?: string;
+  days?: Array<'mo' | 'tu' | 'we' | 'th' | 'fr' | 'sa' | 'su'>;
+  rate?: string | number;
+  rates?: Array<{ occupancy: number; rate: number }>;
+  availability?: number;
+  min_stay_arrival?: number;
+  min_stay_through?: number;
+  min_stay?: number;
+  max_stay?: number;
+  closed_to_arrival?: boolean | 0 | 1;
+  closed_to_departure?: boolean | 0 | 1;
+  stop_sell?: boolean | 0 | 1;
+};
+
+export type ChannexAriUpdatePayload = {
+  values: ChannexAriValue[];
+};
+
+export type ChannexTaskResource = {
+  id: string;
+  type: 'task';
+};
+
+export type ChannexWebhookResource = {
+  id: string;
+  type: 'webhook';
+  attributes: {
+    callback_url: string;
+    event_mask: string;
+    request_params: Record<string, string> | null;
+    headers: Record<string, string> | null;
+    is_active: boolean;
+    send_data: boolean;
+  };
+  relationships: {
+    property: {
+      data: {
+        type: 'property';
+        id: string;
+      };
+    };
+  };
+};
+
+export type ChannexWebhookWritePayload = {
+  webhook: {
+    callback_url: string;
+    event_mask: string;
+    property_id: string;
+    request_params?: Record<string, string> | null;
+    headers?: Record<string, string> | null;
+    is_active?: boolean;
+    send_data?: boolean;
+  };
+};
+
+export type ChannexWebhookTestResponse = {
+  status_code: number;
+  body: string;
+};

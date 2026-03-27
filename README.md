@@ -75,3 +75,18 @@ middleware.ts
 - `room_types`: list + filtro por propriedade, options, get by id, create, update e delete com `force` (`/api/tenant/channex/room-types`).
 - `rate_plans`: list, options por propriedade, get by id, create, update e delete com `force` (`/api/tenant/channex/rate-plans`).
 
+
+
+## ARI + Webhooks integrados
+
+- ARI implementado em `services/channex/ari.ts` com endpoints para consultar e atualizar `restrictions` e `availability`.
+- Rotas prontas:
+  - `GET/POST /api/tenant/channex/ari/restrictions`
+  - `GET/POST /api/tenant/channex/ari/availability`
+- Atualizações ARI passam pela fila por propriedade (`services/channex/queue.ts`) para respeitar limites e reduzir risco de `429`.
+- Webhooks implementado em `services/channex/webhooks.ts` com list/get/create/update/delete/test.
+- Rotas prontas:
+  - `GET/POST /api/tenant/channex/webhooks`
+  - `GET/PUT/DELETE /api/tenant/channex/webhooks/:id`
+  - `POST /api/tenant/channex/webhooks/test`
+

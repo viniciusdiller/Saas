@@ -83,6 +83,8 @@ middleware.ts
 - `reviews` + `scores`: list/get de reviews, reply, guest_review, score por propriedade e score detalhado (`/api/tenant/channex/reviews`, `/api/tenant/channex/scores/:propertyId`).
 - `channel_availability_rules`: list/get/create/update/delete com filtro por propriedade (`/api/tenant/channex/channel-availability-rules`).
 - `stripe_tokenization`: criação de token de cartão e payment method por booking (`/api/tenant/channex/bookings/:id/stripe-token`, `/api/tenant/channex/bookings/:id/stripe-payment-method`).
+- `payment_app`: conexão OAuth Stripe, providers, default provider e reporting de transações (`/api/tenant/channex/payment-app/:installationId/*`) + operações de pagamento em booking (`pre-auth`, `settle`, `void`, `charge`, `refund`).
+- `channel_codes` + `iframe`: endpoint mock para catálogo de códigos OTA e geração de one-time token com URL pronta de IFrame (`/api/tenant/channex/channel-codes`, `/api/tenant/channex/auth/one-time-token`).
 
 
 

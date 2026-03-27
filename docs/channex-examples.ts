@@ -283,3 +283,63 @@ export const CREATE_CHANNEL_AVAILABILITY_RULE_EXAMPLE = {
     property_id: '18535b75-26a0-4716-ae99-0578006639c5',
   },
 };
+
+export const PAYMENT_APP_CONNECT_EXAMPLE = {
+  provider: 'stripe',
+  title: 'Stripe Conta Principal',
+  redirect_url: 'https://pousada.exemplo.com/channex/payments/callback',
+};
+
+export const PAYMENT_PROVIDER_LIST_EXAMPLE = {
+  page: 1,
+  limit: 10,
+};
+
+export const PAYMENT_PROVIDER_UPDATE_EXAMPLE = {
+  id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+  params: {
+    title: 'Stripe Matriz',
+  },
+};
+
+export const PRE_AUTH_PAYMENT_EXAMPLE = {
+  amount: '100.50',
+  booking_id: '513866a5-bdb1-4ff5-b02f-390f7fad7bd2',
+  payment_provider_id: 'ccaf28f3-f066-4f7d-b5a5-6dafd8a98753',
+  description: 'Pré-autorização no check-in',
+};
+
+export const SETTLE_OR_VOID_PAYMENT_EXAMPLE = {
+  payment_id: 'ba8dcd0f-fc91-4778-ae9f-6927a359c849',
+};
+
+export const CHARGE_PAYMENT_EXAMPLE = {
+  booking_id: '513866a5-bdb1-4ff5-b02f-390f7fad7bd2',
+  payment_provider_id: 'ccaf28f3-f066-4f7d-b5a5-6dafd8a98753',
+  amount: '10.00',
+  description: 'Cobrança de diária extra',
+};
+
+export const REFUND_PAYMENT_EXAMPLE = {
+  amount: '100.50',
+  payment_id: '73538783-d1c1-436a-b947-b4263232023b',
+};
+
+export const ONE_TIME_TOKEN_EXAMPLE = {
+  one_time_token: {
+    property_id: '18535b75-26a0-4716-ae99-0578006639c5',
+    group_id: '52397a6e-c330-44f4-a293-47042d3a3607',
+    username: 'vinicius.diller',
+  },
+};
+
+export const PAYMENT_TRANSACTIONS_QUERY_EXAMPLE = {
+  pagination: {
+    page: 1,
+    limit: 10,
+  },
+  order: {
+    inserted_at: 'desc',
+  },
+  filter: {},
+};

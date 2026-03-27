@@ -1009,3 +1009,140 @@ export type ChannexUpdateAvailabilityRulePayload = ChannexCreateAvailabilityRule
 export type ChannexStripeTokenResponse = {
   token: string;
 };
+
+export type ChannexPaymentConnectPayload = {
+  provider: 'stripe';
+  title: string;
+  redirect_url: string;
+};
+
+export type ChannexPaymentConnectResponse = {
+  link: string;
+};
+
+export type ChannexPaymentProviderResource = {
+  id: string;
+  type: 'payment_provider';
+  attributes: {
+    id: string;
+    title: string;
+    provider: string;
+    is_active: boolean;
+    is_default: boolean;
+    details: {
+      account_id?: string;
+      [key: string]: unknown;
+    };
+  };
+};
+
+export type ChannexPaymentProviderListPayload = {
+  page?: number;
+  limit?: number;
+};
+
+export type ChannexPaymentUpdateProviderPayload = {
+  id: string;
+  params: {
+    title: string;
+  };
+};
+
+export type ChannexPaymentTransactionType = 'charge' | 'refund' | 'pre_auth' | 'void';
+
+export type ChannexPaymentTransaction = {
+  id: string;
+  type: ChannexPaymentTransactionType;
+  currency: string;
+  amount: string;
+  inserted_at: string;
+  updated_at: string;
+  ip_address?: string;
+  booking_id: string;
+  user_id?: string;
+  payment_provider_id?: string;
+  details: {
+    id: string;
+    [key: string]: unknown;
+  };
+};
+
+export type ChannexPaymentStatus =
+  | 'charged'
+  | 'refunded'
+  | 'pre_authorized'
+  | 'cancelled'
+  | 'partially_refunded';
+
+export type ChannexPaymentResource = {
+  id: string;
+  type: 'payment';
+  attributes: {
+    id: string;
+    status: ChannexPaymentStatus;
+    description: string | null;
+    currency: string;
+    amount: string;
+    inserted_at: string;
+    updated_at: string;
+    transactions: ChannexPaymentTransaction[];
+    booking_id: string;
+  };
+  relationships?: {
+    users?: {
+      data: Array<{
+        id: string;
+        type: 'user';
+        attributes?: {
+          id: string;
+          name?: string;
+          email?: string;
+        };
+      }>;
+    };
+    booking?: {
+      data: {
+        id: string;
+        type: 'booking';
+        attributes?: {
+          id: string;
+          reference?: string;
+        };
+      };
+    };
+    payment_provider?: {
+      data: ChannexPaymentProviderResource;
+    };
+  };
+};
+
+export type ChannexBookingPaymentActionPayload = {
+  amount?: string;
+  booking_id?: string;
+  payment_provider_id?: string;
+  payment_id?: string;
+  description?: string;
+};
+
+export type ChannexPaymentTransactionsQueryPayload = {
+  pagination?: {
+    page?: number;
+    limit?: number;
+  };
+  order?: {
+    inserted_at?: 'asc' | 'desc';
+  };
+  filter?: Record<string, unknown>;
+};
+
+export type ChannexOneTimeTokenPayload = {
+  one_time_token: {
+    property_id: string;
+    group_id?: string;
+    username: string;
+  };
+};
+
+export type ChannexOneTimeTokenResponse = {
+  token: string;
+};

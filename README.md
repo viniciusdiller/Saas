@@ -47,3 +47,12 @@ middleware.ts
 - Endpoint autenticado de diagnóstico: `GET /api/tenant/channex/readiness`.
 - Recomendação arquitetural: separar operações operacionais (check-in/check-out/governança) da sincronização de distribuição (ARI/bookings).
 
+
+
+## Fetch real da Channex com fallback para mock
+
+- Cliente HTTP centralizado em `lib/channex.ts` com header `user-api-key`, tratamento de `data/meta/errors`, paginação e filtros.
+- Integração de leitura em `services/channex/api.ts` (bookings + room types) com mapeamento para os tipos internos.
+- `services/tenantService.ts` agora tenta ler dados reais da Channex quando `CHANNEX_API_KEY` e `CHANNEX_PROPERTY_ID` estiverem definidos; caso contrário mantém banco/mock.
+- Mock data centralizado na pasta `mocks/` (`mocks/demoData.ts` e `mocks/dashboard.ts`).
+

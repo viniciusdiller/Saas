@@ -343,3 +343,16 @@ export const PAYMENT_TRANSACTIONS_QUERY_EXAMPLE = {
   },
   filter: {},
 };
+
+export const UPDATE_RATES_EXAMPLE = {
+  values: [
+    {
+      property_id: '716305c4-561a-4561-a187-7f5b8aeb5920',
+      rate_plan_id: 'bab451e7-9ab1-4cc4-aa16-107bf7bbabb2',
+      date_from: '2026-04-01',
+      date_to: '2026-04-30',
+      days: ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'],
+      rate: 35000,
+    },
+  ],
+};

@@ -63,7 +63,7 @@ middleware.ts
 - `lib/channex.ts` agora aplica proteção local para ARI por propriedade (até 10/min para `availability` e 10/min para `restrictions/rates`) e retry com exponential backoff ao receber `429`.
 - Em caso de `429`, a propriedade entra em pausa temporária (padrão: 60s), evitando flood de requests.
 - Fila assíncrona de ARI em `services/channex/queue.ts` com flush padrão de 6s para batch/spacing.
-- Coleção de propriedades implementada em `services/channex/properties.ts` e exposta via `GET /api/tenant/channex/properties` (com `mode=options`).
+- Coleção de propriedades implementada em `services/channex/properties.ts` e exposta via `GET/POST /api/tenant/channex/properties` (com `mode=options`) e `GET/PUT/DELETE /api/tenant/channex/properties/:id`.
 
 
 
@@ -90,9 +90,10 @@ middleware.ts
 
 ## ARI + Webhooks integrados
 
-- ARI implementado em `services/channex/ari.ts` com endpoints para consultar e atualizar `restrictions` e `availability`.
+- ARI implementado em `services/channex/ari.ts` com endpoints para consultar e atualizar `restrictions`, `rates` e `availability`.
 - Rotas prontas:
   - `GET/POST /api/tenant/channex/ari/restrictions`
+  - `GET/POST /api/tenant/channex/ari/rates`
   - `GET/POST /api/tenant/channex/ari/availability`
 - Atualizações ARI passam pela fila por propriedade (`services/channex/queue.ts`) para respeitar limites e reduzir risco de `429`.
 - Webhooks implementado em `services/channex/webhooks.ts` com list/get/create/update/delete/test.

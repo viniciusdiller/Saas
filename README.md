@@ -65,3 +65,13 @@ middleware.ts
 - Fila assíncrona de ARI em `services/channex/queue.ts` com flush padrão de 6s para batch/spacing.
 - Coleção de propriedades implementada em `services/channex/properties.ts` e exposta via `GET /api/tenant/channex/properties` (com `mode=options`).
 
+
+
+## Novas coleções Channex integradas
+
+- `property_users`: list, invite, get by id, update e delete (`/api/tenant/channex/property-users`).
+- `groups`: list, get by id, create, update, delete, associar/remover propriedade (`/api/tenant/channex/groups`).
+- `group_users`: list, invite, get by id, update e delete (`/api/tenant/channex/group-users`).
+- `room_types`: list + filtro por propriedade, options, get by id, create, update e delete com `force` (`/api/tenant/channex/room-types`).
+- `rate_plans`: list, options por propriedade, get by id, create, update e delete com `force` (`/api/tenant/channex/rate-plans`).
+

@@ -64,3 +64,58 @@ export const CREATE_PROPERTY_EXAMPLE = {
     },
   },
 };
+
+export const INVITE_PROPERTY_USER_EXAMPLE = {
+  invite: {
+    property_id: '52397a6e-c330-44f4-a293-47042d3a3607',
+    user_email: 'other_user@channex.io',
+    role: 'user',
+    overrides: {},
+  },
+};
+
+export const CREATE_GROUP_EXAMPLE = {
+  group: {
+    title: 'South London Group',
+  },
+};
+
+export const INVITE_GROUP_USER_EXAMPLE = {
+  invite: {
+    group_id: '52397a6e-c330-44f4-a293-47042d3a3607',
+    user_email: 'other_user@channex.io',
+    role: 'user',
+    overrides: {},
+  },
+};
+
+export const CREATE_ROOM_TYPE_EXAMPLE = {
+  room_type: {
+    property_id: '716305c4-561a-4561-a187-7f5b8aeb5920',
+    title: 'Standard Room',
+    count_of_rooms: 20,
+    occ_adults: 3,
+    occ_children: 0,
+    occ_infants: 0,
+    default_occupancy: 2,
+    room_kind: 'room',
+    facilities: [],
+  },
+};
+
+export const CREATE_RATE_PLAN_EXAMPLE = {
+  rate_plan: {
+    title: 'Best Available Rate',
+    property_id: '716305c4-561a-4561-a187-7f5b8aeb5920',
+    room_type_id: '994d1375-dbbd-4072-8724-b2ab32ce781b',
+    options: [
+      {
+        occupancy: 3,
+        is_primary: true,
+        rate: 0,
+      },
+    ],
+    sell_mode: 'per_room',
+    rate_mode: 'manual',
+  },
+};

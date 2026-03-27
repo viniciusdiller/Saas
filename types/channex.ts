@@ -234,3 +234,233 @@ export type ChannexCreatePropertyPayload = {
 };
 
 export type ChannexUpdatePropertyPayload = ChannexCreatePropertyPayload;
+
+export type ChannexAccessRole = 'owner' | 'user';
+
+export type ChannexLinkedUser = {
+  id: string;
+  type: 'user';
+  email?: string;
+  name?: string;
+};
+
+export type ChannexPropertyUser = {
+  id: string;
+  type: 'property_user';
+  attributes: {
+    id: string;
+    overrides: Record<string, unknown> | null;
+    property_id: string;
+    role: ChannexAccessRole;
+    user_id: string;
+  };
+  relationships?: {
+    property?: { data: { id: string; type: 'property' } };
+    user?: { data: ChannexLinkedUser };
+  };
+};
+
+export type ChannexInvitePropertyUserPayload = {
+  invite: {
+    property_id: string;
+    user_email: string;
+    role: ChannexAccessRole;
+    overrides?: Record<string, unknown>;
+  };
+};
+
+export type ChannexUpdatePropertyUserPayload = {
+  property_user: {
+    role: ChannexAccessRole;
+    overrides?: Record<string, unknown> | null;
+  };
+};
+
+export type ChannexGroup = {
+  id: string;
+  type: 'group';
+  attributes: {
+    id: string;
+    title: string;
+  };
+  relationships?: {
+    properties?: {
+      data: Array<{
+        id: string;
+        type: 'property';
+        attributes?: {
+          id: string;
+          title: string;
+        };
+      }>;
+    };
+  };
+};
+
+export type ChannexCreateGroupPayload = {
+  group: {
+    title: string;
+  };
+};
+
+export type ChannexUpdateGroupPayload = ChannexCreateGroupPayload;
+
+export type ChannexGroupUser = {
+  id: string;
+  type: 'group_user';
+  attributes: {
+    id: string;
+    overrides: Record<string, unknown> | null;
+    group_id: string;
+    role: ChannexAccessRole;
+    user_id: string;
+  };
+  relationships?: {
+    group?: { data: { id: string; type: 'group' } };
+    user?: { data: ChannexLinkedUser };
+  };
+};
+
+export type ChannexInviteGroupUserPayload = {
+  invite: {
+    group_id: string;
+    user_email: string;
+    role: ChannexAccessRole;
+    overrides?: Record<string, unknown>;
+  };
+};
+
+export type ChannexUpdateGroupUserPayload = {
+  group_user: {
+    role: ChannexAccessRole;
+    overrides?: Record<string, unknown> | null;
+  };
+};
+
+export type ChannexRoomTypeOption = {
+  id: string;
+  type: 'room_type';
+  attributes: {
+    id: string;
+    property_id: string;
+    title: string;
+    default_occupancy: number;
+  };
+};
+
+export type ChannexRoomTypeResource = {
+  id: string;
+  type: 'room_type';
+  attributes: {
+    id: string;
+    title: string;
+    property_id?: string;
+    occ_adults: number;
+    occ_children: number;
+    occ_infants: number;
+    default_occupancy: number;
+    count_of_rooms: number;
+    room_kind?: 'room' | 'dorm';
+    capacity?: number | null;
+    content?: ChannexPropertyContent;
+  };
+  relationships?: {
+    property?: { data: { id: string; type: 'property' } };
+  };
+};
+
+export type ChannexCreateRoomTypePayload = {
+  room_type: {
+    property_id: string;
+    title: string;
+    count_of_rooms: number;
+    occ_adults: number;
+    occ_children: number;
+    occ_infants: number;
+    default_occupancy: number;
+    facilities?: string[];
+    room_kind?: 'room' | 'dorm';
+    capacity?: number | null;
+    content?: ChannexPropertyContent;
+  };
+};
+
+export type ChannexUpdateRoomTypePayload = {
+  room_type: Partial<ChannexCreateRoomTypePayload['room_type']>;
+};
+
+export type ChannexRatePlanOption = {
+  id: string;
+  type: 'rate_plan';
+  attributes: {
+    id: string;
+    title: string;
+    property_id: string;
+    room_type_id: string;
+    sell_mode: 'per_room' | 'per_person';
+    occupancy?: number;
+    parent_rate_plan_id?: string | null;
+    rate_category_id?: string | null;
+  };
+};
+
+export type ChannexRatePlanResource = {
+  id: string;
+  type: 'rate_plan';
+  attributes: {
+    id: string;
+    title: string;
+    property_id?: string;
+    room_type_id?: string;
+    sell_mode: 'per_room' | 'per_person';
+    rate_mode: 'manual' | 'derived' | 'auto' | 'cascade';
+    currency?: string;
+    children_fee?: string;
+    infant_fee?: string;
+    max_stay?: number[];
+    min_stay_arrival?: number[];
+    min_stay_through?: number[];
+    closed_to_arrival?: boolean[];
+    closed_to_departure?: boolean[];
+    stop_sell?: boolean[];
+    options: Array<{
+      occupancy: number;
+      is_primary: boolean;
+      rate?: number;
+      derived_option?: Record<string, unknown> | null;
+    }>;
+    [key: string]: unknown;
+  };
+};
+
+export type ChannexCreateRatePlanPayload = {
+  rate_plan: {
+    title: string;
+    property_id: string;
+    room_type_id: string;
+    tax_set_id?: string;
+    parent_rate_plan_id?: string | null;
+    children_fee?: string;
+    infant_fee?: string;
+    max_stay?: number[];
+    min_stay_arrival?: number[];
+    min_stay_through?: number[];
+    closed_to_arrival?: boolean[];
+    closed_to_departure?: boolean[];
+    stop_sell?: boolean[];
+    options: Array<{
+      occupancy: number;
+      is_primary: boolean;
+      rate?: number;
+      derived_option?: Record<string, unknown>;
+    }>;
+    currency?: string;
+    sell_mode?: 'per_room' | 'per_person';
+    rate_mode?: 'manual' | 'derived' | 'auto' | 'cascade';
+    [key: string]: unknown;
+  };
+};
+
+export type ChannexUpdateRatePlanPayload = {
+  rate_plan: Partial<ChannexCreateRatePlanPayload['rate_plan']>;
+};

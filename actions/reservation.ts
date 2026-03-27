@@ -98,8 +98,8 @@ export async function createManualReservationAction(input: ManualReservationInpu
   return {
     id: created.channexReservationId,
     roomId: room.localRoomId,
-    checkIn: created.checkIn,
-    checkOut: created.checkOut,
+    checkIn: created.checkIn.slice(0, 10),
+    checkOut: created.checkOut.slice(0, 10),
     status: created.status,
     otaSource: created.otaSource,
     channelReference: created.channelReference,

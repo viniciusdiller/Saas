@@ -547,3 +547,138 @@ export type ChannexWebhookTestResponse = {
   status_code: number;
   body: string;
 };
+
+export type ChannexBookingGuest = {
+  name?: string;
+  surname?: string;
+};
+
+export type ChannexBookingOccupancy = {
+  adults: number;
+  children: number;
+  infants: number;
+  ages?: number[];
+};
+
+export type ChannexBookingRoom = {
+  amount?: string;
+  booking_room_id?: string;
+  checkin_date: string;
+  checkout_date: string;
+  rate_plan_id?: string | null;
+  room_type_id?: string | null;
+  ota_unique_id?: string | null;
+  days?: Record<string, string>;
+  occupancy: ChannexBookingOccupancy;
+  guests?: ChannexBookingGuest[];
+  services?: Array<Record<string, unknown>>;
+  taxes?: Array<Record<string, unknown>>;
+  meta?: Record<string, unknown> | null;
+};
+
+export type ChannexBookingCustomer = {
+  name?: string;
+  surname?: string;
+  mail?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+  language?: string;
+  zip?: string;
+  company?: Record<string, unknown> | null;
+  meta?: Record<string, unknown>;
+};
+
+export type ChannexBookingGuarantee = {
+  card_number?: string;
+  card_type?: string;
+  cardholder_name?: string;
+  cvv?: string;
+  expiration_date?: string;
+  is_virtual?: boolean;
+  meta?: Record<string, unknown>;
+};
+
+export type ChannexBookingAttributes = {
+  id: string;
+  property_id: string;
+  revision_id?: string;
+  booking_id?: string;
+  unique_id?: string;
+  system_id?: string;
+  ota_reservation_code?: string;
+  ota_name?: string;
+  status: 'new' | 'modified' | 'cancelled';
+  rooms: ChannexBookingRoom[];
+  services?: Array<Record<string, unknown>>;
+  guarantee?: ChannexBookingGuarantee | null;
+  customer?: ChannexBookingCustomer;
+  occupancy?: ChannexBookingOccupancy;
+  arrival_date: string;
+  departure_date: string;
+  arrival_hour?: string | null;
+  amount?: string;
+  currency?: string;
+  notes?: string | null;
+  payment_collect?: 'property' | 'ota' | null;
+  payment_type?: 'credit_card' | 'bank_transfer' | null;
+  ota_commission?: string | null;
+  inserted_at?: string;
+  [key: string]: unknown;
+};
+
+export type ChannexBookingResource = {
+  id: string;
+  type: 'booking';
+  attributes: ChannexBookingAttributes;
+};
+
+export type ChannexBookingRevisionResource = {
+  id: string;
+  type: 'booking_revision';
+  attributes: ChannexBookingAttributes;
+};
+
+export type ChannexMetaMessageResponse = {
+  message?: string;
+  warnings?: unknown[];
+};
+
+export type ChannexBookingCrsPayload = {
+  booking: {
+    status?: 'new' | 'modified' | 'cancelled';
+    property_id: string;
+    ota_reservation_code: string;
+    ota_name: string;
+    arrival_date: string;
+    departure_date: string;
+    arrival_hour?: string;
+    services?: Array<Record<string, unknown>>;
+    deposits?: Array<Record<string, unknown>>;
+    payment_collect?: 'property' | 'ota' | null;
+    payment_type?: 'credit_card' | 'bank_transfer' | null;
+    currency?: string;
+    ota_commission?: string;
+    notes?: string;
+    meta?: Record<string, unknown> | null;
+    customer?: ChannexBookingCustomer;
+    rooms: Array<{
+      room_type_id: string;
+      rate_plan_id: string;
+      days: Record<string, string>;
+      services?: Array<Record<string, unknown>>;
+      taxes?: Array<Record<string, unknown>>;
+      guests?: ChannexBookingGuest[];
+      occupancy: ChannexBookingOccupancy;
+      meta?: Record<string, unknown>;
+    }>;
+  };
+};
+
+export type ChannexBookingNoShowPayload = {
+  no_show_report: {
+    waived_fees: boolean;
+    penalty_amount?: string;
+  };
+};

@@ -20,9 +20,8 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { Reservation, Room } = getDb(); // Puxando os modelos do banco
+  const { Reservation, Room } = getDb();
 
-  // Headers de CORS que fizemos antes
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -30,8 +29,6 @@ export async function POST(request: Request) {
   };
 
   try {
-    // 1. Precisamos achar o quarto no banco usando a string (ex: 'vm-bangalow-01')
-    // para pegar o ID numérico real dele no MySQL
     const room = await Room.findOne({
       where: { localRoomId: body.roomId, tenantId: 1 },
     });
@@ -43,25 +40,25 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Gravar no MySQL de verdade!
     const novaReserva = await Reservation.create({
       tenantId: 1,
-      roomId: room.id, // Usando o ID relacional (numérico)
-      channexReservationId: `local-test-${Date.now()}`,
+      roomId: room.id,
+      channexReservationId: `site-direto-${Date.now()}`,
       otaSource: "manual",
-      guestName: body.guestName || "Hóspede Local",
-      guestEmail: "teste@vivamar.com",
-      guestPhone: "22999999999",
+      guestName: body.guestName,
+      guestEmail: body.guestEmail,
+      guestPhone: body.guestPhone,
       checkIn: body.checkIn,
       checkOut: body.checkOut,
       status: "confirmed",
       channelReference: "website-direto",
       amount: body.amount,
       currency: "BRL",
-      notes: "Reserva gerada via Landing Page testando o MySQL",
+      notes: body.notes,
+      createdByUserId: null,
     });
 
-    console.log("SUCESSO: Reserva salva no MySQL com ID:", novaReserva.id);
+    console.log("SUCESSO: Reserva de", body.guestName, "salva no MySQL!");
     return NextResponse.json(novaReserva, {
       status: 201,
       headers: corsHeaders,

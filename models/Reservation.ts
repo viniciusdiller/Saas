@@ -11,6 +11,7 @@ export type ReservationAttributes = {
   guestName: string;
   guestEmail: string;
   guestPhone: string;
+  guestCpf: number | null;
   checkIn: string;
   checkOut: string;
   status: "confirmed" | "pending" | "cancelled" | "blocked";
@@ -40,6 +41,7 @@ export class Reservation
   declare guestName: string;
   declare guestEmail: string;
   declare guestPhone: string;
+  declare guestCpf: number | null;
   declare checkIn: string;
   declare checkOut: string;
   declare status: "confirmed" | "pending" | "cancelled" | "blocked";
@@ -110,6 +112,11 @@ export class Reservation
           type: DataTypes.STRING(40),
           allowNull: false,
           field: "guest_phone",
+        },
+        guestCpf: {
+          type: DataTypes.STRING(20),
+          allowNull: true,
+          field: "guest_cpf",
         },
         checkIn: {
           type: DataTypes.DATE,

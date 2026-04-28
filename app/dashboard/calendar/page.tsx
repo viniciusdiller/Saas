@@ -1,4 +1,4 @@
-import { UnifiedCalendar } from '@/components/unified-calendar';
+import { UnifiedCalendar } from "@/components/calendar/unified-calendar";
 
 export default function CalendarPage() {
   return <UnifiedCalendar />;

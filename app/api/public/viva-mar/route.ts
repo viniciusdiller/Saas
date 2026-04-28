@@ -1,23 +1,33 @@
-// app/api/public/viva-mar/route.ts
 import { NextResponse } from "next/server";
-import { getRooms } from "@/services/tenantService";
 import { getDb } from "@/lib/db";
+import { getAvailableRooms } from "@/services/tenantService";
 
-// Pode remover o OPTIONS manual daqui já que colocamos no next.config.ts
+// 1. GET: Busca os quartos e calcula a disponibilidade
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const checkIn = searchParams.get("checkIn");
+  const checkOut = searchParams.get("checkOut");
 
-export async function GET() {
-  const VIVA_MAR_TENANT_ID = 1;
   try {
-    const rooms = await getRooms(VIVA_MAR_TENANT_ID);
-    return NextResponse.json(rooms);
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Erro ao buscar quartos" },
-      { status: 500 },
+    const rooms = await getAvailableRooms(
+      1,
+      checkIn || undefined,
+      checkOut || undefined,
     );
+
+    return NextResponse.json(rooms, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "no-store",
+      },
+    });
+  } catch (error: any) {
+    console.error("Erro no GET Viva Mar:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
+// 2. POST: Cria a reserva vinda da Landing Page
 export async function POST(request: Request) {
   const body = await request.json();
   const { Reservation, Room } = getDb();
@@ -35,7 +45,7 @@ export async function POST(request: Request) {
 
     if (!room) {
       return NextResponse.json(
-        { error: "Quarto não encontrado no Banco de Dados." },
+        { error: "Quarto não encontrado" },
         { status: 404, headers: corsHeaders },
       );
     }
@@ -48,6 +58,7 @@ export async function POST(request: Request) {
       guestName: body.guestName,
       guestEmail: body.guestEmail,
       guestPhone: body.guestPhone,
+      guestCpf: body.guestCpf,
       checkIn: body.checkIn,
       checkOut: body.checkOut,
       status: "confirmed",
@@ -58,16 +69,28 @@ export async function POST(request: Request) {
       createdByUserId: null,
     });
 
-    console.log("SUCESSO: Reserva de", body.guestName, "salva no MySQL!");
     return NextResponse.json(novaReserva, {
       status: 201,
       headers: corsHeaders,
     });
   } catch (error) {
-    console.error("Erro ao salvar no MySQL:", error);
+    console.error("Erro no POST Viva Mar:", error);
     return NextResponse.json(
       { error: "Erro interno ao criar reserva" },
       { status: 500, headers: corsHeaders },
     );
   }
+}
+
+export async function OPTIONS() {
+  return NextResponse.json(
+    {},
+    {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    },
+  );
 }

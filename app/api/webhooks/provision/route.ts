@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Plano inválido.' }, { status: 400 });
   }
 
-  const { sequelize, Tenant, User } = getDb();
+  const { sequelize, Tenant, User } = await getDb();
 
   try {
     await sequelize.transaction(async (transaction: Transaction) => {

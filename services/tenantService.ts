@@ -9,20 +9,28 @@ import {
 } from "@/services/demoData";
 import type { Expense, Reservation, Room } from "@/types/channex";
 import { isChannexConfigured } from "@/lib/channex";
-import { fetchChannexBookings, fetchChannexRoomTypes } from "@/services/channex/api";
+import {
+  fetchChannexBookings,
+  fetchChannexRoomTypes,
+} from "@/services/channex/api";
+import { Op } from "sequelize";
 
-function mapRoom(room: InstanceType<ReturnType<typeof getDb>["Room"]>): Room {
+function mapRoom(
+  room: InstanceType<Awaited<ReturnType<typeof getDb>>["Room"]>,
+): Room {
   return {
     id: room.localRoomId,
     channexRoomTypeId: room.channexRoomTypeId,
     name: room.name,
     maxGuests: room.maxGuests,
     status: room.status,
+    price: Number(room.price),
+    quantity: room.quantity,
   };
 }
 
 function mapReservation(
-  reservation: InstanceType<ReturnType<typeof getDb>["Reservation"]>,
+  reservation: InstanceType<Awaited<ReturnType<typeof getDb>>["Reservation"]>,
   roomLocalRoomId: string,
 ): Reservation {
   const formatDbDate = (val: any) => {
@@ -50,7 +58,7 @@ function mapReservation(
 }
 
 function mapExpense(
-  expense: InstanceType<ReturnType<typeof getDb>["Expense"]>,
+  expense: InstanceType<Awaited<ReturnType<typeof getDb>>["Expense"]>,
 ): Expense {
   return {
     id: String(expense.id),
@@ -62,35 +70,11 @@ function mapExpense(
 }
 
 function shouldUseChannexLiveData(tenantId: number) {
-  return tenantId !== DEMO_TENANT_ID && isChannexConfigured() && process.env.CHANNEX_PROPERTY_ID;
-}
-
-export async function getRooms(tenantId: number): Promise<Room[]> {
-  if (tenantId === DEMO_TENANT_ID) {
-    return getDemoRooms();
-  }
-
-  if (shouldUseChannexLiveData(tenantId)) {
-    try {
-      const channexRooms = await fetchChannexRoomTypes({ page: 1, limit: 100 });
-      if (channexRooms.length > 0) {
-        return channexRooms;
-      }
-    } catch {
-      // fallback para banco local/mock
-    }
-  }
-
-  try {
-    const { Room } = getDb();
-    const rooms = await Room.findAll({
-      where: { tenantId },
-      order: [["name", "ASC"]],
-    });
-    return rooms.map((room) => mapRoom(room));
-  } catch {
-    return getDemoRooms();
-  }
+  return (
+    tenantId !== DEMO_TENANT_ID &&
+    isChannexConfigured() &&
+    process.env.CHANNEX_PROPERTY_ID
+  );
 }
 
 export async function getReservations(
@@ -119,7 +103,7 @@ export async function getReservations(
   }
 
   try {
-    const { Room, Reservation } = getDb();
+    const { Room, Reservation } = await getDb();
     const reservations = await Reservation.findAll({
       where: { tenantId },
       include: [{ model: Room, as: "room" }],
@@ -143,7 +127,7 @@ export async function updateReservation(
     return updateDemoReservation(updatedReservation);
   }
 
-  const { Room, Reservation } = getDb();
+  const { Room, Reservation } = await getDb();
 
   const room = await Room.findOne({
     where: { tenantId, localRoomId: updatedReservation.roomId },
@@ -188,7 +172,7 @@ export async function getExpenses(tenantId: number): Promise<Expense[]> {
   }
 
   try {
-    const { Expense } = getDb();
+    const { Expense } = await getDb();
     const expenses = await Expense.findAll({
       where: { tenantId },
       order: [
@@ -210,14 +194,20 @@ export async function createExpense(
     return createDemoExpense(input);
   }
 
-  const { Expense } = getDb();
-  const expense = await Expense.create({ ...input, tenantId });
+  const { Expense } = await getDb();
+
+  const expense = await Expense.create({
+    ...input,
+    tenantId,
+    createdByUserId: 1,
+  });
+
   return mapExpense(expense);
 }
 
 export async function getUnifiedInventory(tenantId: number) {
   const [roomList, reservationList, expenseList] = await Promise.all([
-    getRooms(tenantId),
+    getAvailableRooms(tenantId),
     getReservations(tenantId),
     getExpenses(tenantId),
   ]);
@@ -228,4 +218,82 @@ export async function getUnifiedInventory(tenantId: number) {
     reservations: reservationList,
     expenses: expenseList,
   };
+}
+
+export async function updateRoomPrice(
+  tenantId: number,
+  localRoomId: string,
+  newPrice: number,
+) {
+  const { Room } = await getDb();
+
+  const room = await Room.findOne({
+    where: { tenantId, localRoomId },
+  });
+
+  if (!room) {
+    throw new Error("Quarto não encontrado para esta pousada.");
+  }
+
+  await room.update({
+    price: newPrice,
+  });
+
+  return mapRoom(room);
+}
+
+export async function getAvailableRooms(
+  tenantId: number,
+  checkIn?: string,
+  checkOut?: string,
+) {
+  const { Room, Reservation } = await getDb();
+  const allRooms = await Room.findAll({ where: { tenantId } });
+
+  if (!checkIn || !checkOut) {
+    return allRooms.map((room) => ({
+      ...mapRoom(room),
+      remainingQuantity: room.quantity,
+    }));
+  }
+
+  const reservations = await Reservation.findAll({
+    where: {
+      tenantId,
+      status: "confirmed",
+      [Op.or]: [
+        { checkIn: { [Op.lt]: checkOut }, checkOut: { [Op.gt]: checkIn } },
+      ],
+    },
+  });
+
+  return allRooms.map((room) => {
+    const occupiedCount = reservations.filter(
+      (res) => res.roomId === room.id,
+    ).length;
+    const remaining = room.quantity - occupiedCount;
+
+    return {
+      ...mapRoom(room),
+      remainingQuantity: remaining,
+    };
+  });
+}
+
+export async function getTenantReservations(tenantId: number) {
+  const { Reservation, Room } = await getDb();
+
+  const reservations = await Reservation.findAll({
+    where: { tenantId },
+    include: [
+      {
+        model: Room,
+        as: "room",
+        attributes: ["name", "localRoomId"],
+      },
+    ],
+    order: [["createdAt", "DESC"]],
+  });
+
+  return reservations;
 }

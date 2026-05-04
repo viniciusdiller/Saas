@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     return response;
   }
 
-  const { User, Tenant } = getDb();
+  const { User, Tenant } = await getDb();
 
   const user = await User.findOne({
     where: { email: body.email },

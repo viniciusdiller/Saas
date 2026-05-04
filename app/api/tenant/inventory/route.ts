@@ -8,7 +8,7 @@ export async function GET() {
 
     const rooms = await getAvailableRooms(tenantId);
 
-    const { Reservation, Room } = getDb();
+    const { Reservation, Room } = await getDb();
 
     // 1. MUDANÇA: Agora pedimos para o banco trazer os dados do Quarto (Room) junto com a Reserva
     const dbReservations = await Reservation.findAll({

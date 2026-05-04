@@ -19,7 +19,7 @@ export async function createExpenseAction(input: ExpenseInput) {
     throw new Error('Sessão inválida.');
   }
 
-  const { Expense } = getDb();
+  const { Expense } = await getDb();
 
   await Expense.create({
     tenantId: session.tenantId,

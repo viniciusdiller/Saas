@@ -30,7 +30,7 @@ export async function GET(request: Request) {
 // 2. POST: Cria a reserva vinda da Landing Page
 export async function POST(request: Request) {
   const body = await request.json();
-  const { Reservation, Room } = getDb();
+  const { Reservation, Room } = await getDb();
 
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",

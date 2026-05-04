@@ -6,7 +6,7 @@ export async function PATCH(
   { params }: { params: { id: string } },
 ) {
   try {
-    const { Room } = getDb();
+    const { Room } = await getDb();
     const body = await request.json();
     const roomId = params.id; // Ex: 'vm-standard'
 

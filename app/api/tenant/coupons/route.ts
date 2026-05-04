@@ -4,7 +4,7 @@ import { getDb } from "@/lib/db";
 // LISTAR: Pega todos os cupons da Pousada Viva Mar
 export async function GET() {
   try {
-    const { Coupon } = getDb();
+    const { Coupon } = await getDb();
     const coupons = await Coupon.findAll({
       where: { tenantId: 1 },
       order: [["createdAt", "DESC"]],
@@ -19,7 +19,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { Coupon } = getDb();
+    const { Coupon } = await getDb();
 
     // Verifica se o código já existe
     const existing = await Coupon.findOne({

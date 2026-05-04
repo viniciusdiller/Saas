@@ -56,7 +56,7 @@ export async function createManualReservationAction(input: ManualReservationInpu
     return createDemoManualReservation(input);
   }
 
-  const { Room, Reservation } = getDb();
+  const { Room, Reservation } = await getDb();
   const room = await Room.findOne({ where: { tenantId: session.tenantId, localRoomId: input.roomId } });
 
   if (!room) {

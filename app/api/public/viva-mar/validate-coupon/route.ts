@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { code } = body;
-    const { Coupon } = getDb();
+    const { Coupon } = await getDb();
 
     // Busca o cupom pelo código (ignorando maiúsculas/minúsculas na hora da busca)
     const coupon = await Coupon.findOne({

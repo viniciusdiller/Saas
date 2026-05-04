@@ -4,10 +4,10 @@ import { getDb } from "@/lib/db";
 
 export async function GET() {
   try {
-    const db = getDb();
+    const db = await getDb();
 
     // 1. Sincroniza o banco e recria as tabelas (apagando dados velhos)
-    await db.sequelize.sync({ force: true });
+    await db.sequelize.sync({ alter: true });
 
     // 2. Cria a Pousada Viva Mar
     const [tenant] = await db.Tenant.findOrCreate({

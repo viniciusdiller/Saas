@@ -8,7 +8,7 @@ export async function PATCH(
 ) {
   try {
     const body = await request.json();
-    const { Coupon } = getDb();
+    const { Coupon } = await getDb();
 
     const coupon = await Coupon.findOne({
       where: { id: params.id, tenantId: 1 },
@@ -33,7 +33,7 @@ export async function DELETE(
   { params }: { params: { id: string } },
 ) {
   try {
-    const { Coupon } = getDb();
+    const { Coupon } = await getDb();
     const coupon = await Coupon.findOne({
       where: { id: params.id, tenantId: 1 },
     });

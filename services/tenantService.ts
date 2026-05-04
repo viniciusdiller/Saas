@@ -15,7 +15,9 @@ import {
 } from "@/services/channex/api";
 import { Op } from "sequelize";
 
-function mapRoom(room: InstanceType<ReturnType<typeof getDb>["Room"]>): Room {
+function mapRoom(
+  room: InstanceType<Awaited<ReturnType<typeof getDb>>["Room"]>,
+): Room {
   return {
     id: room.localRoomId,
     channexRoomTypeId: room.channexRoomTypeId,
@@ -28,7 +30,7 @@ function mapRoom(room: InstanceType<ReturnType<typeof getDb>["Room"]>): Room {
 }
 
 function mapReservation(
-  reservation: InstanceType<ReturnType<typeof getDb>["Reservation"]>,
+  reservation: InstanceType<Awaited<ReturnType<typeof getDb>>["Reservation"]>,
   roomLocalRoomId: string,
 ): Reservation {
   const formatDbDate = (val: any) => {
@@ -56,7 +58,7 @@ function mapReservation(
 }
 
 function mapExpense(
-  expense: InstanceType<ReturnType<typeof getDb>["Expense"]>,
+  expense: InstanceType<Awaited<ReturnType<typeof getDb>>["Expense"]>,
 ): Expense {
   return {
     id: String(expense.id),
@@ -101,7 +103,7 @@ export async function getReservations(
   }
 
   try {
-    const { Room, Reservation } = getDb();
+    const { Room, Reservation } = await getDb();
     const reservations = await Reservation.findAll({
       where: { tenantId },
       include: [{ model: Room, as: "room" }],
@@ -125,7 +127,7 @@ export async function updateReservation(
     return updateDemoReservation(updatedReservation);
   }
 
-  const { Room, Reservation } = getDb();
+  const { Room, Reservation } = await getDb();
 
   const room = await Room.findOne({
     where: { tenantId, localRoomId: updatedReservation.roomId },
@@ -170,7 +172,7 @@ export async function getExpenses(tenantId: number): Promise<Expense[]> {
   }
 
   try {
-    const { Expense } = getDb();
+    const { Expense } = await getDb();
     const expenses = await Expense.findAll({
       where: { tenantId },
       order: [
@@ -192,7 +194,7 @@ export async function createExpense(
     return createDemoExpense(input);
   }
 
-  const { Expense } = getDb();
+  const { Expense } = await getDb();
 
   const expense = await Expense.create({
     ...input,
@@ -223,7 +225,7 @@ export async function updateRoomPrice(
   localRoomId: string,
   newPrice: number,
 ) {
-  const { Room } = getDb();
+  const { Room } = await getDb();
 
   const room = await Room.findOne({
     where: { tenantId, localRoomId },
@@ -245,7 +247,7 @@ export async function getAvailableRooms(
   checkIn?: string,
   checkOut?: string,
 ) {
-  const { Room, Reservation } = getDb();
+  const { Room, Reservation } = await getDb();
   const allRooms = await Room.findAll({ where: { tenantId } });
 
   if (!checkIn || !checkOut) {
@@ -279,7 +281,7 @@ export async function getAvailableRooms(
 }
 
 export async function getTenantReservations(tenantId: number) {
-  const { Reservation, Room } = getDb();
+  const { Reservation, Room } = await getDb();
 
   const reservations = await Reservation.findAll({
     where: { tenantId },

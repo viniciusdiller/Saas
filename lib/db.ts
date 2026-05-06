@@ -1,4 +1,5 @@
 import { initializeModels, createSequelizeClient } from '@/models';
+import { DataTypes } from 'sequelize';
 
 export type DbModels = ReturnType<typeof initializeModels>;
 
@@ -18,6 +19,19 @@ function shouldAutoSyncSchema() {
   return process.env.NODE_ENV !== 'production';
 }
 
+async function ensureRoomAmenitiesColumn(models: DbModels) {
+  const table = await models.sequelize.getQueryInterface().describeTable('rooms');
+
+  if (!table.amenities) {
+    await models.sequelize.getQueryInterface().addColumn('rooms', 'amenities', {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      defaultValue: null,
+      comment: 'JSON array de comodidades',
+    });
+  }
+}
+
 export async function getDb(): Promise<DbModels> {
   if (!global.__sequelizeModelsPromise) {
     global.__sequelizeModelsPromise = (async () => {
@@ -29,6 +43,7 @@ export async function getDb(): Promise<DbModels> {
         if (shouldAutoSyncSchema()) {
           await sequelize.sync({ alter: true });
         }
+        await ensureRoomAmenitiesColumn(global.__sequelizeModels);
       }
 
       return global.__sequelizeModels;

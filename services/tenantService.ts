@@ -26,6 +26,7 @@ function mapRoom(
     status: room.status,
     price: Number(room.price),
     quantity: room.quantity,
+    amenities: room.amenities,
   };
 }
 

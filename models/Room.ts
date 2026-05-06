@@ -9,6 +9,7 @@ export type RoomAttributes = {
   quantity: number;
   maxGuests: number;
   status: "active" | "maintenance";
+  amenities?: string | null;
   tenantId: number;
   createdAt?: Date;
   updatedAt?: Date;
@@ -31,6 +32,7 @@ export class Room
   declare quantity: number;
   declare maxGuests: number;
   declare status: "active" | "maintenance";
+  declare amenities: string | null;
   declare tenantId: number;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
@@ -79,6 +81,12 @@ export class Room
           type: DataTypes.ENUM("active", "maintenance"),
           allowNull: false,
           defaultValue: "active",
+        },
+        amenities: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+          defaultValue: null,
+          comment: "JSON array de comodidades",
         },
         tenantId: {
           type: DataTypes.INTEGER.UNSIGNED,
